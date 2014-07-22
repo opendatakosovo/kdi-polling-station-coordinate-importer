@@ -18,20 +18,20 @@ def result():
 			lat = row[4]
 			lon = row[5]
 			
-			stationNumber=row[6]
+			stationNumber=row[6].lower()
+			
 			print(stationNumber + ': ' + lat + ' - ' + lon)
 			cursor = collection.find({'pollingStation.number':stationNumber})
 	
+			
 			if cursor.count() == 0:
 				print("not matched " + stationNumber)
-			elif cursor.count() == 1:
-				
-				doc_id=cursor[0]['_id']
-				collection.update({'_id':doc_id},{'$set':{'pollingStation.coordinates':{'lat':lat,'lon':lon}}})
-				print(cursor[0]['_id'])
-				
 			else:
-				print("Error: Multiple Match")
+				
+				
+				collection.update({'pollingStation.number':stationNumber},{'$set':{'pollingStation.coordinates':{'lat':lat,'lon':lon}}},multi=True)
+				
+			
 
 result()
 
